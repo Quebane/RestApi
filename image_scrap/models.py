@@ -13,11 +13,13 @@ class ImageScrap(models.Model):
 class History(models.Model):
     images = models.ManyToManyField(ImageScrap)
     date = models.DateField(auto_now_add=True)
+    nums = models.IntegerField(default=0, blank=True)
 
     def __unicode__(self):
         result = 'List of image by ' + str(self.date) + ': '
         for image in self.images.all():
-            result += image.url
+            result += image.url + '\n'
+        result += 'Image count ' + str(self.nums)
         return result
 
     class Meta:

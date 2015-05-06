@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from image_scrap import views
 
+
 urlpatterns = [
     url(r'^image/$', views.ImageListViewToday.as_view()),
     url(r'^image/all/$', views.ImageListView.as_view()),

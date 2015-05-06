@@ -7,7 +7,6 @@ from image_scrap.models import ImageScrap, History
 from image_scrap.serializers import HistorySerializers,ImageScrapSerializers
 from abc import ABCMeta
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
 
 
 class JSONResponse(HttpResponse):
@@ -24,13 +23,13 @@ class RestListView(APIView):
     serializer = None
     query_set = None
 
-    def get(self, request, format=None):
+    def get(self, request):
         print request.META
         data = self.query_set
         serializer = self.serializer(data, many=True)
         return JSONResponse(serializer.data)
 
-    def post(self, request, format=None):
+    def post(self, request):
         data = JSONParser().parse(request)
         serializer = self.serializer(data=data)
         if serializer.is_valid():
@@ -75,17 +74,17 @@ class ImageListView(RestListView):
     query_set = ImageScrap.objects.all()
     serializer = ImageScrapSerializers
 
-    @csrf_exempt
-    def post(self, request, format=None):
+    def post(self, request):
         data = JSONParser().parse(request)
         serializer = self.serializer(data=data)
         if serializer.is_valid():
             serializer.save()
             if History.objects.filter(date=timezone.now().date()).exists():
-                history = History.objects.filter(date=timezone.now().date())[0]
+                history = History.objects.get(date=timezone.now().date())
             else:
                 history = History.objects.create()
             history.images.add(ImageScrap.objects.last())
+            history.save()
             return JSONResponse(serializer.data, status=201)
         return JSONResponse(serializer.errors, status=400)
 
@@ -104,12 +103,24 @@ class HistoryListView(RestListView):
     query_set = History.objects.all()
     serializer = HistorySerializers
 
+    def post(self, request):
+        data = JSONParser().parse(request)
+        serializer = self.serializer(data=data)
+        history_exists = History.objects.filter(date=timezone.now().date()).exists()
+        print history_exists
+        if history_exists:
+            return JSONResponse({'error': 'Today history is exists'})
+        if serializer.is_valid():
+            serializer.save()
+            return JSONResponse(serializer.data, status=201)
+        return JSONResponse(serializer.errors, status=400)
 
-class HistoryListViewToday(RestListView):
+
+class HistoryListViewToday(HistoryListView):
     query_set = History.objects.filter(date=timezone.now().date())
     serializer = HistorySerializers
 
 
-class ImageListViewToday(RestListView):
+class ImageListViewToday(ImageListView):
     query_set = ImageScrap.objects.filter(history__date=timezone.now().date())
     serializer = ImageScrapSerializers
