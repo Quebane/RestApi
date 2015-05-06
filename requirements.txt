@@ -1,5 +1,11 @@
+celery==3.1.18
 Django==1.8.1
+django-celery==3.1.16
 django-filter==0.9.2
 djangorestframework==3.1.1
+httpie==0.9.2
+kombu==3.0.26
 Markdown==2.6.2
 Pillow==2.8.1
+pytz==2015.2
+redis==2.10.3
