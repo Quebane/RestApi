@@ -130,4 +130,8 @@ CELERYBEAT_SCHEDULE = {
         'task': 'celery_rest.tasks.count',
         'schedule': crontab(),
     },
+    'get_image': {
+        'task': 'celery_rest.tasks.get_image',
+        'schedule': crontab(),
+    },
 }

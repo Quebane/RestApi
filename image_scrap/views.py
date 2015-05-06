@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from django.http import HttpResponse, Http404
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from image_scrap.models import ImageScrap, History
 from image_scrap.serializers import HistorySerializers,ImageScrapSerializers
 from abc import ABCMeta
@@ -18,13 +18,12 @@ class JSONResponse(HttpResponse):
 
 
 class RestListView(APIView):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (AllowAny,)
     __metaclass__ = ABCMeta
     serializer = None
     query_set = None
 
     def get(self, request):
-        print request.META
         data = self.query_set
         serializer = self.serializer(data, many=True)
         return JSONResponse(serializer.data)
@@ -75,6 +74,7 @@ class ImageListView(RestListView):
     serializer = ImageScrapSerializers
 
     def post(self, request):
+        print request.META
         data = JSONParser().parse(request)
         serializer = self.serializer(data=data)
         if serializer.is_valid():
