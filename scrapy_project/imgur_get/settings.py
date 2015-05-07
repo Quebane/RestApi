@@ -10,10 +10,10 @@
 
 BOT_NAME = 'imgur_get'
 
-SPIDER_MODULES = ['imgur_get.spiders']
-NEWSPIDER_MODULE = 'imgur_get.spiders'
+SPIDER_MODULES = ['scrapy_project.imgur_get.spiders']
+NEWSPIDER_MODULE = 'scrapy_project.imgur_get.spiders'
 
-ITEM_PIPELINES = {'imgur_get.pipelines.ImgurGetPipeline': 1}
+ITEM_PIPELINES = {'scrapy_project.imgur_get.pipelines.ImgurGetPipeline': 100}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'google_get (+http://www.yourdomain.com)'

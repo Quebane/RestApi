@@ -74,7 +74,7 @@ class ImageListView(RestListView):
     serializer = ImageScrapSerializers
 
     def post(self, request):
-        print request.META
+        #print request.META
         data = JSONParser().parse(request)
         serializer = self.serializer(data=data)
         if serializer.is_valid():
@@ -107,7 +107,6 @@ class HistoryListView(RestListView):
         data = JSONParser().parse(request)
         serializer = self.serializer(data=data)
         history_exists = History.objects.filter(date=timezone.now().date()).exists()
-        print history_exists
         if history_exists:
             return JSONResponse({'error': 'Today history is exists'})
         if serializer.is_valid():
