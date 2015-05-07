@@ -15,5 +15,4 @@ NEWSPIDER_MODULE = 'scrapy_project.imgur_get.spiders'
 
 ITEM_PIPELINES = {'scrapy_project.imgur_get.pipelines.ImgurGetPipeline': 100}
 
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'google_get (+http://www.yourdomain.com)'
+

@@ -2,8 +2,9 @@ from celery_rest import app
 from image_scrap.models import History
 from django.utils import timezone
 from scrapy_project.imgur_get import scrapy_start
+from scrapy import log
 
-script_crawl = scrapy_start.ScriptCrawl()
+log.start()
 
 
 @app.task(track_started=True)
@@ -19,4 +20,4 @@ def count():
 
 @app.task
 def get_image():
-    scrapy_start.ScriptCrawl()
+    scrapy_start.run_spider()
