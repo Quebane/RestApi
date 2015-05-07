@@ -2,11 +2,15 @@ from rest_framework.views import APIView
 from django.http import HttpResponse, Http404
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from image_scrap.models import ImageScrap, History
-from image_scrap.serializers import HistorySerializers,ImageScrapSerializers
+from image_scrap.serializers import HistorySerializers, ImageScrapSerializers, UserSerializers
 from abc import ABCMeta
 from django.utils import timezone
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+from rest_framework.authentication import TokenAuthentication
 
 
 class JSONResponse(HttpResponse):
@@ -18,7 +22,8 @@ class JSONResponse(HttpResponse):
 
 
 class RestListView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticatedOrReadOnly, )
+    authentication_classes = (TokenAuthentication,)
     __metaclass__ = ABCMeta
     serializer = None
     query_set = None
@@ -38,6 +43,8 @@ class RestListView(APIView):
 
 
 class RestDetailView(APIView):
+    permission_classes = (IsAuthenticatedOrReadOnly, )
+    authentication_classes = (TokenAuthentication,)
     __metaclass__ = ABCMeta
     serializer = None
     model = None
@@ -74,7 +81,6 @@ class ImageListView(RestListView):
     serializer = ImageScrapSerializers
 
     def post(self, request):
-        #print request.META
         data = JSONParser().parse(request)
         serializer = self.serializer(data=data)
         if serializer.is_valid():
@@ -123,3 +129,20 @@ class HistoryListViewToday(HistoryListView):
 class ImageListViewToday(ImageListView):
     query_set = ImageScrap.objects.filter(history__date=timezone.now().date())
     serializer = ImageScrapSerializers
+
+
+class UserListView(RestListView):
+    query_set = User.objects.all()
+    serializer = UserSerializers
+
+    def post(self, request):
+        data = JSONParser().parse(request)
+        serializer = self.serializer(data=data)
+        user = authenticate(**serializer.initial_data)
+        print user
+        if user is None and serializer.is_valid():
+            user = User.objects.create_user(**serializer.data)
+        elif user is None and not serializer.is_valid():
+            return JSONResponse(serializer.errors, status=400)
+        token = Token.objects.get_or_create(user=user)
+        return JSONResponse({'auth_token': token[0].key}, status=201)
