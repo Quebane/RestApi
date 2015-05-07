@@ -1,2 +1,9 @@
 Use install.sh for install dep.
-Use run.sh for run server and celery
+Use run.sh for run server and celery.
+Please create token for admin and write it to ADMIN_TOKEN in django settings before run scrapy.
+Request http://127.0.0.1:8000/image_scrap/user/ with method POST and data
+{
+    "username": "your_username",
+    "password": "your_password"
+}
+User header 'Authorization: Token your_token' for any none select query

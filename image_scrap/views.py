@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from django.http import HttpResponse, Http404
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from image_scrap.models import ImageScrap, History
 from image_scrap.serializers import HistorySerializers, ImageScrapSerializers, UserSerializers
 from abc import ABCMeta
@@ -131,15 +131,15 @@ class ImageListViewToday(ImageListView):
     serializer = ImageScrapSerializers
 
 
-class UserListView(RestListView):
+class UserListView(APIView):
     query_set = User.objects.all()
     serializer = UserSerializers
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         data = JSONParser().parse(request)
         serializer = self.serializer(data=data)
         user = authenticate(**serializer.initial_data)
-        print user
         if user is None and serializer.is_valid():
             user = User.objects.create_user(**serializer.data)
         elif user is None and not serializer.is_valid():

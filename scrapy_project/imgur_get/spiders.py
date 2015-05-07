@@ -11,7 +11,6 @@ class ImageScrapySpider(CrawlSpider):
     rules = (Rule(LinkExtractor(allow=(r'/gallery/[a-zA-Z0-9]*$', ),), callback='parse_item'), )
 
     def parse_item(self, response):
-        log.msg(response.url)
         image = ImageItem()
         if response.url != 'https://imgur.com/signin':
             image['description'] = response.xpath('//h1[contains(@id, "image-title")]/text()').extract()[0]
