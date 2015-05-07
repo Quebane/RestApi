@@ -128,10 +128,10 @@ CELERYBEAT_SCHEDULE = {
     # Executes every Monday morning at 7:30 A.M
     'count': {
         'task': 'celery_rest.tasks.count',
-        'schedule': crontab(),
+        'schedule': crontab(minute='*/5'),
     },
     'get_image': {
         'task': 'celery_rest.tasks.get_image',
-        'schedule': crontab(minute='*/1'),
+        'schedule': crontab(minute='*/30'),
     },
 }

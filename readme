@@ -1,3 +1,2 @@
-Please install this before pip install -r requirements.txt
-sudo apt-get install python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev
-python manage.py celery -A celery_rest.tasks worker -B
+Use install.sh for install dep.
+Use run.sh for run server and celery
