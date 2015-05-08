@@ -14,5 +14,3 @@ SPIDER_MODULES = ['scrapy_project.imgur_get.spiders']
 NEWSPIDER_MODULE = 'scrapy_project.imgur_get.spiders'
 
 ITEM_PIPELINES = {'scrapy_project.imgur_get.pipelines.ImgurGetPipeline': 100}
-
-

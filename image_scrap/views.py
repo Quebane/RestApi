@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
+from django.views.generic import FormView
+from forms import ImageForm
 
 
 class JSONResponse(HttpResponse):
@@ -146,3 +148,8 @@ class UserListView(APIView):
             return JSONResponse(serializer.errors, status=400)
         token = Token.objects.get_or_create(user=user)
         return JSONResponse({'auth_token': token[0].key}, status=201)
+
+
+class SomeImage(FormView):
+    template_name = 'image_scrap/index.html'
+    form_class = ImageForm

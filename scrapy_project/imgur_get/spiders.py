@@ -14,5 +14,5 @@ class ImageScrapySpider(CrawlSpider):
         image = ImageItem()
         if response.url != 'https://imgur.com/signin':
             image['description'] = response.xpath('//h1[contains(@id, "image-title")]/text()').extract()[0]
-            image['url'] = response.url
+            image['url'] = response.css('div#image > div > img').xpath('@src').extract()
         return image

@@ -9,4 +9,6 @@ urlpatterns = [
     url(r'^history/$', views.HistoryListViewToday.as_view()),
     url(r'^history/all/$', views.HistoryListView.as_view()),
     url(r'^history/(?P<pk>[0-9]+)/$', views.HistoryDetailView.as_view()),
-    url(r'^user/$', views.UserListView.as_view())]
+    url(r'^user/$', views.UserListView.as_view()),
+    url(r'^image/view/$', views.SomeImage.as_view()),
+    url(r'^add_image/$', views.SomeImage.as_view(), name='add_image')]

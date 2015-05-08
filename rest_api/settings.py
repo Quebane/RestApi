@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'rest_framework',
     "djcelery",
     'rest_framework.authtoken',
+     'djangular',
     'image_scrap'
 )
 
@@ -107,7 +108,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ADMIN_TOKEN = None
+STATIC_ROOT = 'image_scrap/static/'
+
+ADMIN_TOKEN = '0759702048e0a16f6c1ea0031247124dd58cfdc0'
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -138,6 +141,6 @@ CELERYBEAT_SCHEDULE = {
     },
     'get_image': {
         'task': 'celery_rest.tasks.get_image',
-        'schedule': crontab(minute='*/30'),
+        'schedule': crontab(minute='*/1'),
     },
 }
